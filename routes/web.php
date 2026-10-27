@@ -1,9 +1,13 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PetugasController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LahanController;
+use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\Masyarakat\ProfilController;
 
 Route::view('/', 'welcome')->name('home');
 
@@ -42,3 +46,41 @@ Route::view('/masyarakat', 'masyarakat.index')
     ->name('masyarakat.index');
 
 // Halaman admin dan petugas akan dibuat pada langkah berikutnya
+
+// Dashboard admin
+Route::get('/admin', [AdminController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.index');
+
+// Dashboard petugas lapangan
+Route::get('/petugas', [PetugasController::class, 'index'])
+    ->middleware(['auth', 'role:petugas_lapangan'])
+    ->name('petugas.index');
+
+Route::middleware(['auth', 'role:masyarakat'])->group(function () {
+    Route::get('/masyarakat/lahan', [LahanController::class, 'index'])
+        ->name('masyarakat.lahan.index');
+
+    Route::get('/masyarakat/lahan/{id}', [LahanController::class, 'show'])
+        ->whereNumber('id')
+        ->name('masyarakat.lahan.show');
+});
+
+Route::middleware(['auth', 'role:masyarakat'])->group(function () {
+    Route::get('/masyarakat/pengajuan', [PengajuanController::class, 'index'])
+        ->name('masyarakat.pengajuan.index');
+
+    Route::get('/masyarakat/pengajuan/buat', [PengajuanController::class, 'create'])
+        ->name('masyarakat.pengajuan.create');
+
+    Route::post('/masyarakat/pengajuan', [PengajuanController::class, 'store'])
+        ->name('masyarakat.pengajuan.store');
+});
+
+Route::middleware(['auth', 'role:masyarakat'])->group(function () {
+    Route::get('/masyarakat/profil', [ProfilController::class, 'show'])
+        ->name('masyarakat.profil.show');
+
+    Route::put('/masyarakat/profil', [ProfilController::class, 'update'])
+        ->name('masyarakat.profil.update');
+});
