@@ -2,21 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pengajuan extends Model
 {
-    protected $table = 'pengajuan';
+    use HasFactory;
+
+    protected $table = 'pengajuans';
 
     protected $fillable = [
         'user_id',
         'lahan_id',
-        'judul',
-        'keterangan',
-        'dokumen',
-        'status',
+        'nama_kegiatan',
+        'deskripsi_kegiatan',
+        'tanggal_pengajuan',
+        'status_pengajuan',
+        'alasan_penolakan',
+        'dokumen_path',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tanggal_pengajuan' => 'date',
+        ];
+    }
 
     public function user(): BelongsTo
     {
@@ -26,5 +39,10 @@ class Pengajuan extends Model
     public function lahan(): BelongsTo
     {
         return $this->belongsTo(Lahan::class);
+    }
+
+    public function riwayatStatuses(): HasMany
+    {
+        return $this->hasMany(RiwayatStatus::class);
     }
 }

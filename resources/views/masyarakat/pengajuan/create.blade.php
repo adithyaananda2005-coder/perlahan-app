@@ -6,7 +6,7 @@
     <title>Buat Pengajuan - PERLAHAN</title>
 </head>
 <body>
-    <h1>Buat Pengajuan</h1>
+    <h1>Buat Pengajuan Pemanfaatan Lahan</h1>
 
     @if (session('info'))
         <p>{{ session('info') }}</p>
@@ -35,27 +35,49 @@
         @csrf
 
         <div>
-            <label for="judul">Judul pengajuan</label>
+            <label for="lahan_id">Pilih lahan</label>
+            <select id="lahan_id" name="lahan_id" required>
+                <option value="">-- Pilih lahan --</option>
+
+                @foreach ($lahan as $item)
+                    <option
+                        value="{{ $item->id }}"
+                        @selected(old('lahan_id') == $item->id)
+                    >
+                        {{ $item->nama_lahan }} — {{ $item->alamat }}
+                    </option>
+                @endforeach
+            </select>
+
+            @if ($lahan->isEmpty())
+                <p>Belum ada lahan tersedia untuk dipilih.</p>
+            @endif
+        </div>
+
+        <br>
+
+        <div>
+            <label for="nama_kegiatan">Nama kegiatan</label>
             <input
-                id="judul"
-                name="judul"
+                id="nama_kegiatan"
+                name="nama_kegiatan"
                 type="text"
-                value="{{ old('judul') }}"
+                value="{{ old('nama_kegiatan') }}"
                 required
-                maxlength="150"
+                maxlength="255"
             >
         </div>
 
         <br>
 
         <div>
-            <label for="keterangan">Keterangan</label>
+            <label for="deskripsi_kegiatan">Deskripsi kegiatan</label>
             <textarea
-                id="keterangan"
-                name="keterangan"
+                id="deskripsi_kegiatan"
+                name="deskripsi_kegiatan"
                 required
                 maxlength="5000"
-            >{{ old('keterangan') }}</textarea>
+            >{{ old('deskripsi_kegiatan') }}</textarea>
         </div>
 
         <br>
@@ -75,7 +97,12 @@
 
         <br>
 
-        <button type="submit">Kirim Pengajuan</button>
+        <button
+            type="submit"
+            @disabled($lahan->isEmpty())
+        >
+            Kirim Pengajuan
+        </button>
     </form>
 
     <p>

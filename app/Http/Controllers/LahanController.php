@@ -10,21 +10,22 @@ class LahanController extends Controller
 {
     public function index(Request $request)
     {
-        if (!Schema::hasTable('lahan')) {
+        if (!Schema::hasTable('lahans')) {
             return view('masyarakat.lahan.index', [
                 'lahan' => collect(),
                 'tableBelumTersedia' => true,
             ]);
         }
 
-        $query = Lahan::query();
+        $query = Lahan::query()
+            ->where('status', 'tersedia');
 
         if ($request->filled('cari')) {
             $cari = $request->input('cari');
 
             $query->where(function ($q) use ($cari) {
-                $q->where('nama', 'like', "%{$cari}%")
-                    ->orWhere('lokasi', 'like', "%{$cari}%");
+                $q->where('nama_lahan', 'like', "%{$cari}%")
+                    ->orWhere('alamat', 'like', "%{$cari}%");
             });
         }
 
@@ -38,9 +39,11 @@ class LahanController extends Controller
 
     public function show($id)
     {
-        abort_unless(Schema::hasTable('lahan'), 404);
+        abort_unless(Schema::hasTable('lahans'), 404);
 
-        $lahan = Lahan::findOrFail($id);
+        $lahan = Lahan::query()
+            ->where('status', 'tersedia')
+            ->findOrFail($id);
 
         return view('masyarakat.lahan.show', compact('lahan'));
     }

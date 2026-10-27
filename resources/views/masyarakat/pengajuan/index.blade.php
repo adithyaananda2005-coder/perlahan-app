@@ -12,6 +12,10 @@
         <p>{{ session('info') }}</p>
     @endif
 
+    @if (session('success'))
+        <p>{{ session('success') }}</p>
+    @endif
+
     <p>
         <a href="{{ route('masyarakat.pengajuan.create') }}">
             Buat pengajuan
@@ -26,10 +30,36 @@
     @else
         @forelse ($pengajuan as $item)
             <article>
-                <h2>{{ $item->judul }}</h2>
-                <p>{{ $item->keterangan }}</p>
-                <p>Status: {{ $item->status ?? 'Menunggu proses' }}</p>
+                <h2>{{ $item->nama_kegiatan }}</h2>
+
+                <p>
+                    <strong>Lahan:</strong>
+                    {{ $item->lahan?->nama_lahan ?? 'Informasi lahan tidak tersedia' }}
+                </p>
+
+                <p>
+                    <strong>Tanggal pengajuan:</strong>
+                    {{ $item->tanggal_pengajuan?->format('d-m-Y') ?? '-' }}
+                </p>
+
+                <p>
+                    <strong>Deskripsi:</strong>
+                    {{ $item->deskripsi_kegiatan }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ ucfirst(str_replace('_', ' ', $item->status_pengajuan)) }}
+                </p>
+
+                @if ($item->alasan_penolakan)
+                    <p>
+                        <strong>Alasan penolakan:</strong>
+                        {{ $item->alasan_penolakan }}
+                    </p>
+                @endif
             </article>
+            <hr>
         @empty
             <p>Belum ada pengajuan.</p>
         @endforelse
