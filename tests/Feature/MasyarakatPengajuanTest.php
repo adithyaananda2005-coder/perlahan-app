@@ -190,4 +190,37 @@ class MasyarakatPengajuanTest extends TestCase
         $response->assertRedirect('/login');
         $this->assertDatabaseCount('pengajuans', 0);
     }
+
+    public function test_pengajuan_ditolak_jika_dokumen_melebihi_5_mb(): void
+    {
+        Storage::fake('local');
+
+        $user = User::factory()->create(['role' => 'masyarakat']);
+        $lahan = $this->buatLahan();
+
+        $data = $this->dataPengajuan($lahan);
+        $data['dokumen'] = UploadedFile::fake()->create(
+            'dokumen.pdf',
+            5121,
+            'application/pdf'
+        );
+
+        $response = $this->actingAs($user)->from(
+            route('masyarakat.pengajuan.create')
+        )->post(
+            route('masyarakat.pengajuan.store'),
+            $data
+        );
+
+        $response->assertRedirect(route('masyarakat.pengajuan.create'));
+        $response->assertSessionHasErrors('dokumen');
+
+        $this->assertDatabaseCount('pengajuans', 0);
+        $this->assertDatabaseCount('riwayat_statuses', 0);
+
+        $this->assertSame(
+            [],
+            Storage::disk('local')->allFiles('dokumen-pengajuan')
+        );
+    }
 }
