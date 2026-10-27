@@ -35,7 +35,7 @@
             <a class="nav-link active" href="#dashboard">
                 <span>▦</span> Dashboard
             </a>
-            <a class="nav-link" href="#data-lahan">
+            <a class="nav-link" href="data-lahan">
                 <span>♧</span> Data Lahan
             </a>
             <a class="nav-link" href="#peta-lahan">
@@ -63,7 +63,7 @@
                     <small>Ekosistem Daratan</small>
                 </div>
             </div>
-            <a href="#keluar" class="logout-link">⇥ &nbsp; Keluar</a>
+            <a href="welcome" class="logout-link">⇥ &nbsp; Keluar</a>
         </div>
     </aside>
 
