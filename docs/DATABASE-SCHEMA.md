@@ -31,13 +31,13 @@ Usulan dari Modul 1 panduan terbaru.
 | deskripsi | text, nullable | |
 | timestamps | | |
 
-## pengajuans (sudah ada, branch backend/fadhil)
+## pengajuans (sudah ada, branch database/schema)
 
 | Kolom | Tipe | Catatan |
 |---|---|---|
 | id | bigint, PK | |
 | user_id | FK ke users.id | pemilik pengajuan |
-| lahan_id | bigint, index | FK ke lahans.id ditambah setelah tabel lahans ada |
+| lahan_id | bigint, index | FK ke lahans.id (migration add_lahan_foreign_key_to_pengajuans_table) |
 | nama_kegiatan | string | |
 | deskripsi_kegiatan | text | |
 | tanggal_pengajuan | date | |
@@ -48,7 +48,7 @@ Usulan dari Modul 1 panduan terbaru.
 
 Nilai status_pengajuan: diajukan, perlu_perbaikan, diverifikasi, ditolak, disetujui, selesai.
 
-## riwayat_statuses (sudah ada, branch backend/fadhil)
+## riwayat_statuses (sudah ada, branch database/schema)
 
 | Kolom | Tipe | Catatan |
 |---|---|---|
@@ -63,13 +63,13 @@ Nilai status_pengajuan: diajukan, perlu_perbaikan, diverifikasi, ditolak, disetu
 ## Relasi
 
 - users 1 ke N pengajuans
-- lahans 1 ke N pengajuans (foreign key menyusul)
+- lahans 1 ke N pengajuans (foreign key sudah ada)
 - pengajuans 1 ke N riwayat_statuses
 - users 1 ke N riwayat_statuses
 
 ## Keputusan terbuka
 
 1. Dokumen pendukung: tetap satu kolom dokumen_path, atau tabel baru dokumen_pengajuan?
-2. Foreign key lahan_id ditambah lewat migration baru setelah migration lahans masuk.
+2. (Selesai) Foreign key lahan_id sudah ditambah lewat migration terpisah.
 3. Tabel verifikasi, foto_verifikasi, dan monitoring: siapa yang menulis migration-nya dan kapan.
 4. Daftar nilai status lahan: ikut usulan di atas atau diubah?
