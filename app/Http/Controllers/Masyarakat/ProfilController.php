@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Masyarakat;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 
 class ProfilController extends Controller
 {
@@ -34,7 +35,7 @@ class ProfilController extends Controller
         $user->email = $validated['email'];
 
         if (!empty($validated['password'])) {
-            $user->password = $validated['password'];
+            $user->password = Hash::make($validated['password']);
         }
 
         $user->save();
